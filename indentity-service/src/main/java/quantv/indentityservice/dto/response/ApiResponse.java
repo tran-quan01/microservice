@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse <T> {
+    @Builder.Default
     private int code = 1000;
     private String message = "Success";
     private T results;
