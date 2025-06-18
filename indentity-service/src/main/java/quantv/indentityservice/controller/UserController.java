@@ -4,7 +4,10 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import quantv.indentityservice.dto.request.UserCreationRequest;
 import quantv.indentityservice.dto.request.UserUpdateRequest;
@@ -20,6 +23,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     UserService userService;
 
     @PostMapping("")
@@ -29,8 +33,14 @@ public class UserController {
         return apiResponse;
     }
 
-    @GetMapping("")
+    @GetMapping
     ApiResponse<?> findAllUsers() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("Username : {} ", authentication.getName());
+        authentication.getAuthorities().forEach(
+             grantedAuthority -> log.info(grantedAuthority.getAuthority())
+        );
+
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
         List<UserResponse> users = userService.getAllUsers();
         apiResponse.setResultList(users);

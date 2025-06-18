@@ -11,11 +11,13 @@ import quantv.indentityservice.dto.request.UserCreationRequest;
 import quantv.indentityservice.dto.request.UserUpdateRequest;
 import quantv.indentityservice.dto.response.UserResponse;
 import quantv.indentityservice.entity.User;
+import quantv.indentityservice.enums.Role;
 import quantv.indentityservice.exception.AppException;
 import quantv.indentityservice.exception.ErrorCode;
 import quantv.indentityservice.mapper.UserMapper;
 import quantv.indentityservice.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -27,13 +29,19 @@ public class UserService {
 
     UserMapper userMapper;
 
+    PasswordEncoder passwordEncoder;
+
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
+        user.setRoles(roles);
+
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
