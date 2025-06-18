@@ -1,27 +1,29 @@
 package quantv.indentityservice.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name="Users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-    private String username;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private LocalDate birthDate;
+    String id;
+    String username;
+    String password;
+    String firstName;
+    String lastName;
+    LocalDate birthDate;
+    Set<String> roles;
 }
