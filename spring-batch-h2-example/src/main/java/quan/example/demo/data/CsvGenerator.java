@@ -1,5 +1,6 @@
 package quan.example.demo.data;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,12 @@ public class CsvGenerator {
     private static final String[] LAST_NAMES = {"Van A", "Thi B", "Minh C", "Thu D", "Quoc E", "Mai F", "Tuan G", "Thanh H", "Ngoc I", "Duy J"};
 
     public static void main(String[] args) {
+        File directory = new File(FILE_DIRECTORY);
+        if (!directory.exists()) {
+            directory.mkdirs(); // Tạo thư mục (và các thư mục cha nếu cần)
+            System.out.println("Created directory: " + FILE_DIRECTORY);
+        }
+
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_NAME))) {
             // Write header
             writer.println("firstName,lastName");
