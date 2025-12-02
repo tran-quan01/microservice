@@ -8,6 +8,8 @@ COPY pom.xml .
 COPY src ./src
 
 # Build source code with maven
+RUN mkdir -p /app/data
+RUN chmod -R 777 /app/data
 RUN mvn package -DskipTests
 
 #Stage 2: create image
