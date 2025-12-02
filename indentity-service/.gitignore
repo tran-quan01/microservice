@@ -3,7 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-h2-data/
+h2-data/*.lock.db
+h2-data/*.trace.db
 
 ### STS ###
 .apt_generated
