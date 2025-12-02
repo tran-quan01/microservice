@@ -10,7 +10,7 @@ services:
     volumes:
       - ./h2-data:/app/data   # mount host folder cho H2
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/testdb;AUTO_SERVER=TRUE
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/testdb;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;MODE=LEGACY
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_H2_CONSOLE_ENABLED=true
