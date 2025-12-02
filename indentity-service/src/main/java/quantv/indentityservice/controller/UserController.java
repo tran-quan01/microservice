@@ -52,6 +52,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping("/info")
+    ResponseEntity<?> getMyInfo() {
+        return ResponseEntity.ok(userService.getMyInfo());
+    }
+
     @PutMapping("/{userId}")
     ResponseEntity<?> updateUser(@PathVariable("userId") String id,
                                  @RequestBody UserUpdateRequest userUpdateRequest) {
