@@ -3,8 +3,7 @@ package quantv.indentityservice.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import quantv.indentityservice.dto.request.UserCreationRequest;
@@ -64,5 +63,20 @@ public class UserService {
 
     public void deleteUserById(String id) {
         userRepository.deleteById(id);
+    }
+
+    public UserResponse getMyInfo() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return userMapper.toUserResponse(user);
     }
 }
