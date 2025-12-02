@@ -30,10 +30,10 @@ public class BatchConfig {
         return new FlatFileItemReaderBuilder<Person>()
                 .name("personItemReader")
                 .resource(new ClassPathResource("users.csv"))
-                .delimited() // File duoc phan cach boi dau ,
-                .names("firstName", "lastName") // Ten cac cot trong file csv
+                .delimited()
+                .names("firstName", "lastName")
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<>(){{
-                    setTargetType(Person.class); // anh xa vao lop person
+                    setTargetType(Person.class);
                 }})
                 .build();
     }
@@ -57,9 +57,9 @@ public class BatchConfig {
                              Step step1,
                              JobCompletionNotificationListener listener) {
         return new JobBuilder("importUserJob", jobRepository)
-                .incrementer(new RunIdIncrementer()) // Đảm bảo mỗi lần chạy là duy nhất
-                .listener(listener) // Đăng ký listener để nhận thông báo khi Job hoàn thành
-                .flow(step1) // Định nghĩa luồng Job: chạy Step 1
+                .incrementer(new RunIdIncrementer())
+                .listener(listener)
+                .flow(step1)
                 .end()
                 .build();
     }

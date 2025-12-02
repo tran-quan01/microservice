@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -31,6 +32,10 @@ public class SecurityConfig {
             "/v1/api/users"
     };
 
+    private final String[] H2_CONSOLE = {
+            "/h2-console/**"
+    };
+
     @Value("${jwt.signerKey}")
     private String singerKey;
 
@@ -39,10 +44,13 @@ public class SecurityConfig {
         http.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
                         .permitAll()
+                        .requestMatchers(H2_CONSOLE)
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_ENDPOINTS)
                         .hasRole(Role.ADMIN.name())
                         .anyRequest()
                         .authenticated());
+        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http.oauth2ResourceServer(oauth ->
                 oauth.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
