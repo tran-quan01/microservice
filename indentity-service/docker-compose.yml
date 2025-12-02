@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    image: indentity:latest
+    container_name: indentity-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./h2-data:/app/data   # mount host folder cho H2
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/testdb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    restart: always
