@@ -1,6 +1,7 @@
 package quantv.indentityservice.exception;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,7 +13,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value= AppException.class)
     public ResponseEntity<?> handleAppException(AppException e) {
         ErrorCode errorCode = e.getErrorCode();
-        return ResponseEntity.badRequest().body(ApiResponse.builder()
+        return ResponseEntity.status(errorCode.getStatusCode()).body(ApiResponse.builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .build());
@@ -36,6 +37,17 @@ public class GlobalExceptionHandler {
                 ApiResponse.builder()
                         .code(ErrorCode.UNCATCH_EXCEPTION.getCode())
                         .message(ErrorCode.UNCATCH_EXCEPTION.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(Exception e) {
+        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        return ResponseEntity.status(errorCode.getStatusCode()).body(
+                ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
                         .build()
         );
     }
