@@ -54,6 +54,8 @@ public class SecurityConfig {
         http.oauth2ResourceServer(oauth ->
                 oauth.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())
         );
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();

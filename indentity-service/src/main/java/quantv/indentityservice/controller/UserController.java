@@ -27,7 +27,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("")
-    ApiResponse<?> addUser(@RequestBody @Valid UserCreationRequest request) {
+    ApiResponse<UserResponse> addUser(@RequestBody @Valid UserCreationRequest request) {
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResults(userService.createUser(request));
         return apiResponse;
@@ -48,19 +48,28 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    ResponseEntity<?> findById(@PathVariable("userId") String id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    ApiResponse<UserResponse> findById(@PathVariable("userId") String id) {
+        ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
+        UserResponse users = userService.getUserById(id);
+        apiResponse.setResults(users);
+        return apiResponse;
     }
 
     @GetMapping("/info")
-    ResponseEntity<?> getMyInfo() {
-        return ResponseEntity.ok(userService.getMyInfo());
+    ApiResponse<UserResponse> getMyInfo() {
+        ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
+        UserResponse users = userService.getMyInfo();
+        apiResponse.setResults(users);
+        return apiResponse;
     }
 
     @PutMapping("/{userId}")
-    ResponseEntity<?> updateUser(@PathVariable("userId") String id,
+    ApiResponse<UserResponse> updateUser(@PathVariable("userId") String id,
                                  @RequestBody UserUpdateRequest userUpdateRequest) {
-        return ResponseEntity.ok(userService.updateUserById(id, userUpdateRequest));
+        ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
+        UserResponse users = userService.updateUserById(id, userUpdateRequest);
+        apiResponse.setResults(users);
+        return apiResponse;
     }
 
     @DeleteMapping("/{userId}")
