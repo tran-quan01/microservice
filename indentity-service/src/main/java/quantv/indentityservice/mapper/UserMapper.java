@@ -5,6 +5,7 @@ import org.mapstruct.MappingTarget;
 import quantv.indentityservice.dto.request.UserCreationRequest;
 import quantv.indentityservice.dto.request.UserUpdateRequest;
 import quantv.indentityservice.dto.response.UserResponse;
+import quantv.indentityservice.entity.Role;
 import quantv.indentityservice.entity.User;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface UserMapper {
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
     UserResponse toUserResponse(User user);
     List<UserResponse> toUserResponses(List<User> users);
+
+    default String map(Role role) {
+        return role.getName();
+    }
 }
