@@ -14,6 +14,7 @@ import quantv.indentityservice.enums.Role;
 import quantv.indentityservice.exception.AppException;
 import quantv.indentityservice.exception.ErrorCode;
 import quantv.indentityservice.mapper.UserMapper;
+import quantv.indentityservice.repository.RoleRepository;
 import quantv.indentityservice.repository.UserRepository;
 
 import java.util.HashSet;
@@ -25,6 +26,7 @@ import java.util.List;
 public class UserService {
 
     UserRepository userRepository;
+    RoleRepository roleRepository;
 
     UserMapper userMapper;
 
@@ -37,9 +39,8 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
-//        user.setRoles(roles);
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -57,6 +58,9 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userMapper.updateUser(user,  request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
